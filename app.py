@@ -8,7 +8,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import faiss
 import numpy as np
-import yfinance as yf
+import finnhub
 from google import genai
 from google.genai import types
 from fastapi import FastAPI
@@ -77,23 +77,9 @@ def generate_chart_image(stock_data: list, save_path: str) -> str:
     return save_path
 
 def get_live_stock_data(stock_symbol):
-    # 1. Create a custom session
-    session = requests.Session()
-    # 2. Add a 'User-Agent' header to mimic a real browser
-    session.headers.update({
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-    })
-    
-    # 3. Pass the session to the Ticker
-    ticker = yf.Ticker(stock_symbol, session=session)
-    
-    # 4. Fetch data
-    df = ticker.history(period="1d", interval="5m")
-    
-    if df.empty:
-        raise ValueError(f"No data found for symbol {stock_symbol}")
-        
-    return df
+    client = finnhub.Client(api_key=os.getenv("FINNHUB_API_KEY"))
+    quote = client.quote(stock_symbol)
+    return quote
 
 def get_live_news(stock_symbol: str) -> list:
     gnews_token = os.getenv("GNEWS_API_KEY", "demo")
