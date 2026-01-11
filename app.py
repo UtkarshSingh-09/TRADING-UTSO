@@ -113,8 +113,7 @@ def get_live_news(stock_symbol: str) -> list:
 def run_analysis_for_stock(stock_symbol: str) -> dict | None:
     stock_data = get_live_stock_data(stock_symbol)
     if not stock_data: return None
-    is_anomaly, percent_change = is_movement_significant(stock_data)
-    
+    is_anomaly, percent_change = is_movement_significant(stock_data, threshold_sigma=0.1)
     if not is_anomaly:
         return {"status": "stable", "stock_symbol": stock_symbol, "percent_change": round(percent_change, 2)}
 
