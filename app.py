@@ -77,10 +77,28 @@ def generate_chart_image(stock_data: list, save_path: str) -> str:
     return save_path
 
 def get_live_stock_data(stock_symbol):
+    # Initialize the client with your secret key
     client = finnhub.Client(api_key=os.getenv("FINNHUB_API_KEY"))
+    
+    # Fetch the real-time quote
     quote = client.quote(stock_symbol)
-    return quote
+    
+    # Check if we got data (Finnhub returns 0 for invalid symbols)
+    if not quote or quote.get('c') == 0:
+        print(f"❌ Finnhub: No data for {stock_symbol}")
+        return []
 
+    # Current Price: quote['c'], Previous Close: quote['pc']
+    # We create a simple list to satisfy your anomaly detector's logic
+    stock_data = [
+        {"time": "Previous Close", "price": quote['pc']},
+        {"time": "Open", "price": quote['o']},
+        {"time": "High", "price": quote['h']},
+        {"time": "Low", "price": quote['l']},
+        {"time": "Current", "price": quote['c']}
+    ]
+    
+    return stock_data
 def get_live_news(stock_symbol: str) -> list:
     gnews_token = os.getenv("GNEWS_API_KEY", "demo")
     url = f"https://gnews.io/api/v4/search?q={stock_symbol}&lang=en&max=10&token={gnews_token}"
