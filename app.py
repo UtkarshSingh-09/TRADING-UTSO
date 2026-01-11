@@ -76,11 +76,24 @@ def generate_chart_image(stock_data: list, save_path: str) -> str:
     plt.close()
     return save_path
 
-def get_live_stock_data(stock_symbol: str) -> list:
-    ticker = yf.Ticker(stock_symbol)
+def get_live_stock_data(stock_symbol):
+    # 1. Create a custom session
+    session = requests.Session()
+    # 2. Add a 'User-Agent' header to mimic a real browser
+    session.headers.update({
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+    })
+    
+    # 3. Pass the session to the Ticker
+    ticker = yf.Ticker(stock_symbol, session=session)
+    
+    # 4. Fetch data
     df = ticker.history(period="1d", interval="5m")
-    if df.empty: return []
-    return [{"time": str(idx), "price": row["Close"]} for idx, row in df.iterrows()]
+    
+    if df.empty:
+        raise ValueError(f"No data found for symbol {stock_symbol}")
+        
+    return df
 
 def get_live_news(stock_symbol: str) -> list:
     gnews_token = os.getenv("GNEWS_API_KEY", "demo")
