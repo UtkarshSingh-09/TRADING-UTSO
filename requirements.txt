@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+python-dotenv
+google-genai
+sentence-transformers
+pandas
+matplotlib
+faiss-cpu
+numpy
+yfinance
+requests
