@@ -66,13 +66,23 @@ class MyEncoder:
     def __call__(self, text: str) -> list[float]:
         return self.model.encode(text).tolist()
 
-def generate_chart_image(stock_data: list, save_path: str) -> str:
+def generate_chart_image(stock_data, save_path="/tmp/chart.png"):
+    # stock_data is now a list of dicts: [{'time': 'Prev Close', 'price': 150.0}, ...]
     df = pd.DataFrame(stock_data)
-    df['time'] = pd.to_datetime(df['time'])
-    plt.figure(figsize=(6, 3))
-    plt.plot(df['time'], df['price'], color='blue', linewidth=2.5)
-    plt.axis('off')
-    plt.savefig(save_path, format='png', bbox_inches='tight', pad_inches=0)
+    
+    plt.figure(figsize=(10, 6))
+    
+    # FIX: Don't use pd.to_datetime() here because 'Prev Close' isn't a date.
+    # We use the string labels directly for the X-axis.
+    plt.plot(df['time'], df['price'], marker='o', linestyle='-', color='blue', linewidth=2)
+    
+    plt.title(f"Stock Price Movement")
+    plt.xlabel("Point")
+    plt.ylabel("Price (USD)")
+    plt.grid(True, linestyle='--', alpha=0.7)
+    
+    # Save to /tmp/ so Hugging Face doesn't block the write permission
+    plt.savefig(save_path)
     plt.close()
     return save_path
 
