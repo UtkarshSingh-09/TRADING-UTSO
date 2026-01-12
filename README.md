@@ -1,4 +1,4 @@
-# TRADING SOUT 🚀
+# TRADING UTSO 🚀
 
 ![React](https://img.shields.io/badge/REACT-19-61DAFB?style=for-the-badge&logo=react&logoColor=black)
 ![Node.js](https://img.shields.io/badge/NODE.JS-EXPRESS-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
