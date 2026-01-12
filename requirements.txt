@@ -12,13 +12,6 @@ gnews
 sentence-transformers
 huggingface_hub
 faiss-cpu
-fastapi
-uvicorn
-python-dotenv
-google-genai
-sentence-transformers
-pandas
-matplotlib
 numpy
-finnhub-python
-requests
+yfinance
+pydantic
